@@ -125,6 +125,10 @@ docker cp directory/. container_name:/path # if the path doesn´t exist, Docker 
 # Copy from Docker container to local machine
 docker cp container_name:/path local_path/ # if the path doesn´t exist, Docker will create inside the container
 ```
+- Rename image (create a clone of the old image)
+```bash
+docker tag image_old_name:tag image_new_name:tag
+```
 
 ## Dockerfile
 
@@ -163,3 +167,20 @@ docker run image_name -p port:application_running_port
 ```
 
 ![[docker_image_container.png]]
+
+## Push image to Docker Hub
+
+1. Create a repository in Docker Hub
+2. Change the Docker image to the Docker repository name
+	```bash
+	docker tag local-image:tagname new-repo:tagname
+	```
+3. Login with Docker CLI
+	```
+	docker login
+	```
+4. Push the image
+	```bash
+	docker push new-repo:tagname
+	```
+
