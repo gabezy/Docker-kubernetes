@@ -1,0 +1,49 @@
+# ref: https://docs.docker.com/reference/compose-file/version-and-name/
+# version: '' version of docker-compose file (features) - OBSOLETE
+
+name: goalsapp
+
+services:
+  mongo:
+    image: mongo
+    container_name: 'mongodb'
+    volumes:
+      - data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=gabezy
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+  backend:
+    build: ./backend
+      # context: ./backend
+      # dockerfile: Dockerfile
+      # args:
+      #   - some-arg=value
+    container_name: goals-backend
+    ports:
+      - '3001:3001'
+    volumes:
+      - logs:/app/logs
+      - ./backend:/app      #bind mount
+      - /app/node_modules   # anonymous volume
+    environment:
+      - PORT=3001
+      - MONGODB_USERNAME=gabezy
+      - MONGODB_PASSWORD=secret
+    depends_on:             
+      - mongo           # tells docker-componse that backend container needs the mongodb start first
+  frontend:
+    build: ./frontend
+    container_name: goals-frontend
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./frontend/src:/app/src
+    # stdin_open: true    # -i
+    # tty: true           # -t
+    depends_on:
+      - backend
+
+# specify named volumes
+volumes:
+  data:
+  logs:

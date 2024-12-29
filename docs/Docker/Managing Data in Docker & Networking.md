@@ -7,7 +7,7 @@
 
 ## [Volumes](https://docs.docker.com/engine/storage/volumes/)
 
-Volumes are a storage mechanism that provide the ability to persist data beyond the lifecycle of an individual container. basically, **folders on the host machine** hard drive which are mounted (mapped) into containers. 
+Volumes are a storage mechanism that provide the ability to persist data beyond the life cycle of an individual container. basically, **folders on the host machine** hard drive which are mounted (mapped) into containers. 
 Docker handles volumes with two types:
 - Anonymous Volumes
 	- Create **automatically** and **specific** for a single container
@@ -19,7 +19,7 @@ Docker handles volumes with two types:
 docker run -d -p 80:80 --name feedback -v /app/feedback feedback-node:volumes
 ```
 - Named Volumes
-	- Explicitly created with specify name (CLI or compose.yaml)
+	- Explicitly created with specify name (CLI or docker-compose.yaml)
 	- Persist after container removal unless explicitly deleted
 	- Used when `docker run` the container with `-v <volume-name>:<mount-path>` flag
 ```bash
@@ -51,12 +51,12 @@ A Bind mount is a file or directory mounted on the host machine into the contain
 - Useful during development for hot reloading
 
 ```bash
-docker run -d -p 80:80 --name feedback -v feedback:/app/feedback -v $(pwd):/app feedback-node:volumes
+docker run -d -p 80:80 --name feedback -v feedback:/app/feedback -v $(pwd):/app feedback-node:latest
 ```
 
 To ensure that the bind mount will be read-only (in the container perspective), it is used the `:ro` flag after the mount-path
 ```
-docker run -d -p 80:80 --name feedback -v feedback:/app/feedback -v $(pwd):/app:ro feedback-node:volumes
+docker run -d -p 80:80 --name feedback -v feedback:/app/feedback -v $(pwd):/app:ro feedback-node:latest
 ```
 
 
@@ -151,3 +151,14 @@ Docker also supports these alternative drivers - though you will use the "bridge
 - **Third-party plugins**: You can install third-party plugins which then may add all kinds of behaviors and functionalities
     
 As mentioned, the "**bridge**" driver makes most sense in the vast majority of scenarios.
+
+```bash
+--mongo
+docker run -d --name mongo --network goals-net --rm -v mongodb:/data/db -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=secret mongo
+
+-- back
+docker run -d --name goal-back --rm --network goals-net -p 3001:3001 -v $(pwd):/app:ro -v /app/node_modules -v logs:/app/logs goals-node
+
+-- front
+docker run --name goal-front --rm -p 3000:3000 -v $(pwd):/app -v /app/node_modules -d react-goals
+```
