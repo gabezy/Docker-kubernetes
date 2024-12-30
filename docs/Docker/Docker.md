@@ -129,7 +129,16 @@ docker cp container_name:/path local_path/ # if the path doesn´t exist, Docker 
 ```bash
 docker tag image_old_name:tag image_new_name:tag
 ```
+- Execute commands inside a running the container
+```bash
+docker exec -it <container_name> [command]
+```
+- Overwrite the default command at container initialization
+```bash
+docker run -it <image> [command]
 
+docker run -it node npm init
+```
 ## Dockerfile
 
 The `Dockerfile` is a special file that holds all the configuration, commands and images that will be used to build the desirable Docker Image using `dockerd`.

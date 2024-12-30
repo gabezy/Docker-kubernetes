@@ -102,3 +102,7 @@ docker-compose up --build -d
 ```bash
 docker-compose build
 ```
+- Run a specific service in the `docker-compose.yaml` file
+```bash
+docker-compose run <service_name> [command]
+```
