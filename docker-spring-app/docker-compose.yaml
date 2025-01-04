@@ -1,0 +1,17 @@
+services:
+  spring:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - '8080:8080'
+      - '35729:35729' # live reload
+    volumes:
+      - ./:/app
+      - ~/.m2:/root/.m2
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DEVTOOLS_REMOTE_SECRET=mysecret
+    deploy:
+      restart_policy:
+        condition: on-failure
