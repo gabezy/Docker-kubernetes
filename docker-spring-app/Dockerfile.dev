@@ -1,0 +1,11 @@
+FROM maven:3-amazoncorretto-17-alpine
+
+WORKDIR /app
+
+COPY pom.xml .
+
+RUN mvn dependency:go-offline
+
+RUN mkdir -p target
+
+CMD [ "mvn", "spring-boot:run" ]

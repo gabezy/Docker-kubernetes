@@ -1,0 +1,9 @@
+HELP.md
+.gitattributes
+.gitignore
+mvnw.*
+.idea
+target
+.mvn
+Dockerfile.prod
+docker-compose.yaml
