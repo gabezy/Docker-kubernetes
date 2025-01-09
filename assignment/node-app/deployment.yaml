@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-first-app-deploymemt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-deployment
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: node-deployment
+        tier: backend
+    spec:
+      containers:
+        - name: app-node-container
+          image: gabezy/kube-first-app:2

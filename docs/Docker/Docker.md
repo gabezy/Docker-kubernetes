@@ -193,3 +193,6 @@ docker run image_name -p port:application_running_port
 	docker push new-repo:tagname
 	```
 
+## Multi-Stage Builds
+
+When we have a React application, for example, the development build image process is different from the production build process. In React and front-end development, there is an embedded web server to serve the application content and JavaScript code, which helps during the development process. However, in the final build version of the code used in the production environment, there will be no embedded server. Therefore, it is necessary to provide a web server (e.g., Nginx).

@@ -1,5 +1,5 @@
 # Pull the base image to run node 
-FROM node:14-slim
+FROM node:14-alpine
 
 # Set a workdir
 WORKDIR /app
@@ -13,6 +13,6 @@ RUN npm install
 COPY . /app
 
 # Expose server port
-EXPOSE 3000
+EXPOSE 8080
 
 CMD [ "node", "server.js" ]

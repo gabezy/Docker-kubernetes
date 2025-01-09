@@ -5,7 +5,12 @@ const app = express();
 app.get('/', (req, res) => {
   res.send(`
     <h1>Hello from inside the very basic Node app!</h1>
+    <p>Try sending a reques to /error and see what happens</p>
   `);
 })
 
-app.listen(3000);
+app.get('/error', (req, res) => {
+  process.exit(1)
+})
+
+app.listen(8080);
