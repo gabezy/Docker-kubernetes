@@ -1,0 +1,34 @@
+# Establishing the PersistentVolume and its configuration
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: host-pv
+spec:
+  capacity:
+    storage: 250Mi # Gi (Gigabyte)
+  #https://www.computerweekly.com/feature/Storage-pros-and-cons-Block-vs-file-vs-object-storage
+  volumeMode: Filesystem # or Block
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce # The volume can be mounted as a read-write volume by a single node (multiple pods on the same node)
+    #- ReadOnlyMany #  The volume can be mounted as read-only by many nodes.
+    #- ReadWriteMany # The volume can be mounted as read-write by many nodes.
+    #- ReadWriteOncePod # Assure only on pod across the whole cluster can read and write to the PV
+  hostPath:
+    path: /data
+    type: DirectoryOrCreate
+---
+# Establishing the claim and its configuration
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: host-pvc
+spec:
+  volumeName: host-pv
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  #Which resources this PVC will claim from the PV
+  resources:
+    requests:
+        storage: 250Mi

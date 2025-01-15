@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-service
+spec:
+  selector:
+    app: story-node
+  ports:
+    - protocol: 'TCP'
+      port: 3000
+      targetPort: 3000
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: story-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: story-node
+  template:
+    metadata:
+      labels:
+        app: story-node
+    spec:
+      containers:
+        - name: story
+          image: gabezy/kub-data-demo:latest
+          imagePullPolicy: Always
+          env:
+            - name: STORY_FOLDER
+              valueFrom:
+                configMapKeyRef: 
+                  name: data-store-env
+                  key: folder
+          # define where which volume should be mount
+          volumeMounts:
+            - mountPath: /app/story # path define in the application and the Dockerfile (workdir)
+              name: story-vol # point to the respective volume that will be used to mount
+      volumes:
+        - name: story-vol
+          persistentVolumeClaim:
+            claimName: host-pvc
