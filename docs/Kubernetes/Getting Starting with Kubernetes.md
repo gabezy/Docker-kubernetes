@@ -79,6 +79,14 @@ kubectl rollout undo deployment/first-app --to-revision=1 # rollback to a specif
 kubectl delete service first-app
 
 kubectl delete deployment first-app
+
+kubectl get sc # get all storage class
+
+kubectl get pv # get all PersistentVolumes
+
+kubectl get pvc # get all PersistentVolumesClaim
+
+kubectl get configmap # get all ConfigMap
 ```
 
 ## Create Resources (Declarative Approach)
@@ -90,18 +98,20 @@ kind: Service
 metadata:
 	name: backend
 spec:
+	# Which Pods the service will be select
 	selector:
 		app: node-deployment
 	ports:
 		- protocol: 'TCP'
 		  port: 3000
+		  # The port from the container in the pod
 		  targetPort: 8080
 	type: LoadBalancer
 --- # this 3 dashs is used in yaml to separate two different objects
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-name: kube-first-app-deploymemt
+	name: kube-first-app-deploymemt
 spec:
 	replicas: 1
 	selector:
@@ -112,22 +122,23 @@ spec:
 		matchExpressions:
 			- {key: app, operator: In, values: [deployment, prod]}
 	# pod's metadata
-	metadata:
-		label:
-			app: deployment
-			tier: backend
-	spec:
-		# which containers will be initilized in the pod (List)
-		containers:
-			- name: app-node-container
-			  image: gabezy/kube-first-app:latest
-			  # Health check configs
-			  livenessProbe:
-				  httpGet:
-					  path: /
-					  port: 8080
-			- name: nginx
-			  image: nginx
+	template:
+		metadata:
+			labels:
+				app: deployment
+				tier: backend
+		spec:
+			# which containers will be initilized in the pod (List)
+			containers:
+				- name: app-node-container
+				  image: gabezy/kube-first-app:latest
+				  # Health check configs
+				  livenessProbe:
+					  httpGet:
+						  path: /
+						  port: 8080
+				- name: nginx
+				  image: nginx
 ```
 
 To make Kubernetes to create the deployment and the service, use the following command:
@@ -150,4 +161,3 @@ documentation:
 		- `ClusterIP`: Reachable only inside the Cluster.
 		- `NodePort`: Should be expose with help of the node that run the deployment (externally accessible).
 		- `LoadBalance`: Utilize a load balance that already exists and use the address of the load balance to distribute to the available instances.
-- Volume
